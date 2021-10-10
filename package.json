@@ -1,10 +1,12 @@
 {
-  "name": "CsvToSql",
+  "name": "csv-to-db",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Herudi",
   "license": "MIT",
   "dependencies": {
-    "json-sql": "^0.5.0"
+    "json-sql": "^0.5.0",
+    "pg": "^8.7.1",
+    "uuid": "^8.3.2"
   }
 }
