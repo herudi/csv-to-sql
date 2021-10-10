@@ -1,0 +1,10 @@
+{
+  "name": "CsvToSql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Herudi",
+  "license": "MIT",
+  "dependencies": {
+    "json-sql": "^0.5.0"
+  }
+}
