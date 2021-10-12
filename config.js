@@ -1,14 +1,6 @@
 exports.config = {
-  csv_file: __dirname + "/item_sub_category.csv",
-  table_name: "hmt_item_sub_category",
-  columns: [
-    "item_sub_category_id",
-    "item_category_id",
-    "name",
-    "description",
-    "status",
-    "created_by"
-  ],
+  csv_file: __dirname + "/item_category.csv",
+  table_name: "hmt_item_category",
   default_data: {
     "created_at": new Date().toISOString(),
     "updated_at": new Date().toISOString()
@@ -17,8 +9,8 @@ exports.config = {
 
 exports.connection = {
   user: 'postgres',
-  host: 'host',
-  database: 'db',
-  password: 'pass',
+  host: 'asd',
+  database: 'asd',
+  password: 'asd',
   port: 5432,
 }
