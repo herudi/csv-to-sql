@@ -23,7 +23,7 @@ lines.forEach((line) => {
   let obj = {};
   let row = line.split(";");
   for (let i = 0; i < COLUMNS.length; i++) {
-    obj[COLUMNS[i]] = row[i];
+    obj[COLUMNS[i]] = row[i].trim();
   }
   for (const k in config.default_data) {
     obj[k] = config.default_data[k];
