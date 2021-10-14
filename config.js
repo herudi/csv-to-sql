@@ -10,8 +10,8 @@ exports.config = {
 
 exports.connection = {
   user: 'postgres',
-  host: '114.7.144.198',
+  host: 'host',
   database: 'cloudritel_test',
-  password: 'S4ng4tR4h4s14',
+  password: 'pass',
   port: 5432,
 }
