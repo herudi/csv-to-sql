@@ -50,6 +50,23 @@ lines.forEach((line) => {
 //   const sql = jsonSql.build({ type: 'insert', table: TABLE_NAME, values: _arr });
 //   query += sql.query;
 // }
+if (config.is_price_code) {
+  const objBarcode = {};
+  const priceId = {};
+  const newArr = arr.map(el => {
+    if (el.barcode !== objBarcode[el.barcode]) {
+      el.price_code = priceId[el.barcode] = v4();
+      objBarcode[el.barcode] = el.barcode;
+    }
+    return el;
+  }).map(el => {
+    if (!el.price_code && el.barcode === objBarcode[el.barcode]) {
+      el.price_code = priceId[el.barcode];
+    }
+    return el;
+  });
+  arr = newArr;
+}
 const sql = jsonSql.build({ type: 'insert', table: TABLE_NAME, values: arr });
 pool.connect((err, client, done) => {
   if (err) throw err;

@@ -4,13 +4,14 @@ exports.config = {
   default_data: {
     "created_at": new Date().toISOString(),
     "updated_at": new Date().toISOString()
-  }
+  },
+  is_price_code: true
 }
 
 exports.connection = {
   user: 'postgres',
-  host: 'asd',
-  database: 'asd',
-  password: 'asd',
+  host: '114.7.144.198',
+  database: 'cloudritel_test',
+  password: 'S4ng4tR4h4s14',
   port: 5432,
 }
