@@ -1,5 +1,5 @@
-const { Pool } = require('pg');
-const { config, connection } = require("./config");
+const { QueryTypes } = require('sequelize');
+const { config, sequelize } = require("./config");
 const fs = require("fs");
 const { v4 } = require('uuid');
 const jsonSql = require("json-sql")({
@@ -10,9 +10,6 @@ const jsonSql = require("json-sql")({
 
 const INPUT_FILE = config.csv_file;
 const TABLE_NAME = config.table_name;
-
-console.log("Connecting...");
-const pool = new Pool(connection);
 
 console.log("Processing data...");
 const iFile = fs.readFileSync(INPUT_FILE, "utf-8");
@@ -25,8 +22,13 @@ lines.forEach((line) => {
   for (let i = 0; i < COLUMNS.length; i++) {
     const row = rows[i].trim();
     if (row !== "") {
-      obj[COLUMNS[i]] = row;
+      if (config.numeric[COLUMNS[i]]) {
+        obj[COLUMNS[i]] = parseFloat(row);
+      } else {
+        obj[COLUMNS[i]] = row;
+      }
     }
+    
   }
   for (const k in config.default_data) {
     obj[k] = config.default_data[k];
@@ -68,15 +70,10 @@ if (config.is_price_code) {
   arr = newArr;
 }
 const sql = jsonSql.build({ type: 'insert', table: TABLE_NAME, values: arr });
-pool.connect((err, client, done) => {
-  if (err) throw err;
-  client.query(sql.query, [], (err, res) => {
-    done()
-    if (err) {
-      console.log(err.stack);
-    } else {
-      console.log("Inserting to database...");
-    }
-  })
-})
+console.log("Inserting data...")
+sequelize.query(sql.query, { type: QueryTypes.INSERT }).then(() => {
+  console.log("Success...")
+  console.log("Closing connection...")
+  console.log("Please wait...")
+}).catch(err => console.log(err.stack));
 
