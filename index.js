@@ -92,7 +92,6 @@ if (ACTION === 'i') {
   for (let i = 0; i < arr.length; i++) {
     let el = arr[i];
     const id = ids[i];
-    delete el.id;
     const sql = jsonSql.build({
       type: 'update',
       table: TABLE_NAME,
