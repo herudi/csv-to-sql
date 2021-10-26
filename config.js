@@ -9,7 +9,7 @@ exports.config = {
   table_name: "hmt_items_selling_price",
   // default data before execute
   default_data: {
-    "created_at": new Date().toISOString(),
+    // "created_at": new Date().toISOString(),
     "updated_at": new Date().toISOString()
   },
   // mutating price code 
