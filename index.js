@@ -10,12 +10,14 @@ const jsonSql = require("json-sql")({
 
 const INPUT_FILE = config.csv_file;
 const TABLE_NAME = config.table_name;
+const ACTION = config.action.toLowerCase();
 
 console.log("Processing data...");
 const iFile = fs.readFileSync(INPUT_FILE, "utf-8");
 const lines = iFile.split("\n");
 let COLUMNS = lines.shift().split(";").map(el => el.trim());
 let arr = [];
+let ids = [];
 lines.forEach((line) => {
   let obj = {};
   let rows = line.split(";");
@@ -28,12 +30,19 @@ lines.forEach((line) => {
         obj[COLUMNS[i]] = row;
       }
     }
-    
+
   }
   for (const k in config.default_data) {
     obj[k] = config.default_data[k];
   }
-  obj.id = v4();
+  if (ACTION === "i") {
+    obj.id = v4();
+  } else {
+    if (obj.id) {
+      ids.push(obj.id);
+      delete obj.id;
+    }
+  }
   arr.push(obj);
 });
 // const page = 10;
@@ -69,11 +78,32 @@ if (config.is_price_code) {
   });
   arr = newArr;
 }
-const sql = jsonSql.build({ type: 'insert', table: TABLE_NAME, values: arr });
-console.log("Inserting data...")
-sequelize.query(sql.query, { type: QueryTypes.INSERT }).then(() => {
+function log() {
   console.log("Success...")
   console.log("Closing connection...")
   console.log("Please wait...")
-}).catch(err => console.log(err.stack));
+}
+if (ACTION === 'i') {
+  const sql = jsonSql.build({ type: 'insert', table: TABLE_NAME, values: arr });
+  console.log("Inserting data...")
+  sequelize.query(sql.query, { type: QueryTypes.INSERT }).then(() => log()).catch(err => console.log(err.stack));
+} else if (ACTION === "u") {
+  let uQuery = '';
+  for (let i = 0; i < arr.length; i++) {
+    let el = arr[i];
+    const id = ids[i];
+    delete el.id;
+    const sql = jsonSql.build({
+      type: 'update',
+      table: TABLE_NAME,
+      condition: { id },
+      modifier: el
+    });
+    uQuery += sql.query;
+  }
+  console.log("Updating data...")
+  sequelize.query(uQuery, { type: QueryTypes.UPDATE }).then(() => log()).catch(err => console.log(err.stack));
+}
+
+// fs.writeFileSync(__dirname + "/selling_price_branch.sql", sql.query)
 
